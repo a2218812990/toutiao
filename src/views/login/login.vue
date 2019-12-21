@@ -47,7 +47,7 @@ export default {
         if (value) {
           this.$axios.post('/authorizations', this.rulesForm).then(res => {
             //  then中只接受正确时返回的数据
-            localStorage.setItem('user-token', res.data.data.token)
+            localStorage.setItem('user-token', res.data.token)
             // 将token存储到本地,再跳转到主页（登录页面）
             this.$router.push('/home')
           }).catch(() => {
