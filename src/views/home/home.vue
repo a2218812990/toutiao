@@ -11,7 +11,9 @@
     <layoutheader></layoutheader>
     </el-header>
 
-    <el-main>主题内容</el-main>
+    <el-main>
+    <router-view></router-view>
+    </el-main>
   </el-container>
 
 </el-container>
