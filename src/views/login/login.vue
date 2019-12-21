@@ -50,13 +50,6 @@ export default {
             localStorage.setItem('user-token', res.data.token)
             // 将token存储到本地,再跳转到主页（登录页面）
             this.$router.push('/home')
-          }).catch(() => {
-            // catch中只接受错误时elementui中有一个提示信息插件
-            this.$message({
-              type: 'warning',
-              message: '手机号或验证码错误'
-
-            })
           })
         }
       })
