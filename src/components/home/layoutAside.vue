@@ -1,5 +1,6 @@
 <template>
 <div class="layout-aside">
+
 <div class="logo">
 <img src="../../assets/img/logo_admin.png" alt="">
 </div>
@@ -32,6 +33,7 @@
       <span slot="title">账户信息</span>
  </el-menu-item>
 </el-menu>
+
 </div>
 </template>
 
@@ -42,12 +44,14 @@ export default {
 </script>
 
 <style lang='less' scoped >
+
 .layout-aside{
            width: 220px;
            height:100vh;
            background-color: #353b4e;
        .el-menu{
              border-right: none;
+             margin-top: 10px;
        }
       .logo{
            background: #2e2f32;
