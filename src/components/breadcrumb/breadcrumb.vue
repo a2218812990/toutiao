@@ -1,10 +1,11 @@
 <template>
-<el-breadcrumb separator=">">
-    <el-breadceumb-item to='/home'>首页</el-breadceumb-item>
-    <el-breadceumb-item>
-        <slot name='title'> </slot>
-    </el-breadceumb-item>
+<el-breadcrumb separator='>'>
+    <el-breadcrumb-item to='/home'>首页</el-breadcrumb-item>
+    <el-breadcrumb-item>
+        <slot name='title'></slot>
+    </el-breadcrumb-item>
 </el-breadcrumb>
+
 </template>
 
 <script>
