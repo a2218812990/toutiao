@@ -7,7 +7,7 @@
 </template>
 </breadcrumb>
 <!-- body部分 -->
-<el-table  :data="list">
+<el-table  v-loading="loading" :data="list">
  <el-table-column prop='title'  label='标题' width='600'></el-table-column>
  <el-table-column :formatter='formatter' prop='comment_status' label='评论状态'></el-table-column>
  <el-table-column prop='total_comment_count' label='总评论数'></el-table-column>
@@ -38,6 +38,7 @@
 export default {
   data () {
     return {
+      loading: false,
       list: [],
       page: {
         total: 0, // 一共多少条
@@ -55,11 +56,13 @@ export default {
     },
     // 获取文章信息
     commentlist () {
+      this.loading = true
       this.$axios({
         url: '/articles',
         params: { response_type: 'comment', page: this.page.currentpage, per_page: this.page.pagesize } }).then(res => {
         this.list = res.data.results
         this.page.total = res.data.total_count
+        this.loading = false
       })
     },
     formatter (row, column, cellvalue, index) {
