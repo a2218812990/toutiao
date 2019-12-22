@@ -2,6 +2,7 @@
 import axios from 'axios'
 import router from '../router/index'
 import { Message } from 'element-ui'
+import jsonBigInt from 'json-bigint'
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 axios.interceptors.request.use(function (config) {
 // config中是请求时携带的配置信息，可以进行修改
@@ -9,6 +10,11 @@ axios.interceptors.request.use(function (config) {
   config.headers.Authorization = `Bearer ${token}`
   return config
 })
+// 因为返回的文章id值太长，json.parse无法处理，但是axios又会自动处理，因此用插件来转化
+axios.defaults.transformResponse = [function (data) {
+  console.log(jsonBigInt.parse(data))
+  return jsonBigInt.parse(data)
+}]
 // 返回拦截，返回的数据有些接口其实并不需要，但是不能返回的是undefined不然会报错，给一个空对象返回
 axios.interceptors.response.use(function (response) {
   // 响应数据返回成功的时候
@@ -37,5 +43,7 @@ axios.interceptors.response.use(function (response) {
       break
   }
   Message({ type: 'warning', message })
+  // 缺少对错误的后续处理
+  return Promise.reject(error)
 })
 export default axios
