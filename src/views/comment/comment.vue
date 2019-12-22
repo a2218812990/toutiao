@@ -19,7 +19,18 @@
      </template>
  </el-table-column>
 </el-table>
-
+<!-- 分页插件 -->
+<el-row style="height:80px" type="flex" justify="center" align="middle">
+<el-pagination
+  background
+  layout="prev, pager, next"
+  :total="page.total"
+  :page-size='page.pagesize'
+  :current-page="page.currentpage"
+  @current-change='clickPage'
+  >
+</el-pagination>
+</el-row>
 </el-card>
 </template>
 
@@ -27,15 +38,28 @@
 export default {
   data () {
     return {
-      list: []
+      list: [],
+      page: {
+        total: 0, // 一共多少条
+        currentpage: 1, // 当前的页数
+        pagesize: 10 // 每页显示多少个数
+      }
+
     }
   },
   methods: {
+  //  点击翻页事件
+    clickPage (newPage) {
+      this.page.currentpage = newPage
+      this.commentlist()
+    },
+    // 获取文章信息
     commentlist () {
       this.$axios({
         url: '/articles',
-        params: { response_type: 'comment' } }).then(res => {
+        params: { response_type: 'comment', page: this.page.currentpage, per_page: this.page.pagesize } }).then(res => {
         this.list = res.data.results
+        this.page.total = res.data.total_count
       })
     },
     formatter (row, column, cellvalue, index) {
