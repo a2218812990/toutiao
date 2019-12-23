@@ -18,8 +18,8 @@
        <el-card v-for="item in list" :key="item.id" class="card">
           <img :src="item.url" alt="">
           <el-row class="icon" type="flex" align='middle' justify="space-around">
-              <i class="el-icon-delete-solid"></i>
-                <i class="el-icon-star-on"></i>
+               <i class="el-icon-star-on" @click="collectphoto(item)" :style="{color:item.is_collected?'red':'#000'}"></i>
+              <i  @click='deletephoto(item.id)' class="el-icon-delete-solid"></i>
           </el-row>
        </el-card>
      </div>
@@ -57,11 +57,28 @@ export default {
         pagesize: 8,
         currentpage: 1
       },
-      loading: false
-
+      loading: false,
+      collect: true
     }
   },
   methods: {
+    //   收藏和取消收藏图片
+    collectphoto (target) {
+      this.$axios({
+        url: `/user/images/${target.id}`,
+        method: 'put',
+        data: { collect: !target.is_collected } }).then(res => {
+        this.getphoto()
+      })
+    },
+    // 删除图片素材
+    deletephoto (target) {
+      this.$confirm('你确定要删除这张图片吗？').then(() => {
+        this.$axios({ url: `/user/images/${target}`, method: 'delete' }).then(() => {
+          this.getphoto()
+        })
+      })
+    },
     //   文件上传事件
     uploadfile (params) {
       this.loading = true
@@ -125,6 +142,9 @@ export default {
            background-color:#f4f5f6;
            line-height: 30px;
 
+    }
+    i{
+        cursor: pointer;
     }
     }
 

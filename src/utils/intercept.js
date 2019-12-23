@@ -12,7 +12,7 @@ axios.interceptors.request.use(function (config) {
 })
 // 因为返回的文章id值太长，json.parse无法处理，但是axios又会自动处理，因此用插件来转化
 axios.defaults.transformResponse = [function (data) {
-  return jsonBigInt.parse(data) ? jsonBigInt.parse(data) : {}
+  return data ? jsonBigInt.parse(data) : {}
 }]
 // 返回拦截，返回的数据有些接口其实并不需要，但是不能返回的是undefined不然会报错，给一个空对象返回
 axios.interceptors.response.use(function (response) {
