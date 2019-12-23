@@ -1,5 +1,5 @@
 <template>
-<el-card>
+<el-card v-loading="loading">
     <!-- 头部 -->
 <breadcrumb slot="header">
 <template slot="title">
@@ -7,6 +7,11 @@
 </template>
 </breadcrumb>
 <!-- 主体 -->
+<el-row type="flex" justify="end">
+<el-upload action="" :http-request="uploadfile" :show-file-list="false">
+    <el-button size="small" type="primary">发布图片</el-button>
+</el-upload>
+</el-row>
 <el-tabs v-model="activeName" type="card" @tab-click="tabclick">
  <el-tab-pane label="全部图片" name="all">
      <div class="photo" >
@@ -51,11 +56,22 @@ export default {
         total: 0,
         pagesize: 8,
         currentpage: 1
-      }
+      },
+      loading: false
 
     }
   },
   methods: {
+    //   文件上传事件
+    uploadfile (params) {
+      this.loading = true
+      let data = new FormData()
+      data.append('image', params.file)
+      this.$axios({ url: '/user/images', method: 'post', data }).then(res => {
+        this.loading = false
+        this.getphoto()
+      })
+    },
     //  点击翻页事件
     cliclkpage (newPage) {
       this.page.currentpage = newPage
