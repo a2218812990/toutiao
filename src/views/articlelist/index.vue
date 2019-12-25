@@ -9,7 +9,7 @@
 <!-- 主体 -->
 <el-form  class="forms">
   <el-form-item  label="文章状态:">
-  <el-radio-group v-model="radio">
+  <el-radio-group v-model="searfrom.radio">
       <el-radio :label="5">全部</el-radio>
        <el-radio :label="1">草稿</el-radio>
         <el-radio :label="2">待审核</el-radio>
@@ -18,8 +18,9 @@
   </el-radio-group>
   </el-form-item>
   <el-form-item  label="频道列表:">
-<el-select placehoder="请选择频道">
- <el-option>
+<el-select placeholder="请选择频道" v-model="searfrom.channel_id">
+ <el-option v-for="item in channels" :key="item.id" :label="item.name"
+      :value="item.id">
     </el-option>
 </el-select>
   </el-form-item>
@@ -37,10 +38,10 @@
 </div>
 <div class="list" v-for="item in list" :key='item.id.toString()' >
    <div class="leftimg">
-     <img src="../../assets/img/tx.jpg" alt="">
+     <img :src="item.cover.images[0].length?item.cover.images[0]:defaultImg" alt="">
      <div class="info">
        <span>{{item.title}}</span>
-       <el-tag class='tag'>{{item.status}}</el-tag>
+       <el-tag :type="item.status | filterscolor"   class='tag'>{{item.status | status }}</el-tag>
        <span class="time">{{item.pubdate}}</span>
    </div>
       </div>
@@ -56,19 +57,64 @@
 export default {
   data () {
     return {
-      radio: 5,
+      searfrom: {
+        radio: 5,
+        channel_id: null
+      },
+
       value1: '',
-      list: []
+      list: [],
+      channels: [],
+      defaultImg: require('../../assets/img/tx.jpg')
     }
   },
   methods: {
+    // 获取文章数据
     getdata () {
       this.$axios({ url: '/articles' }).then(res => {
         this.list = res.data.results
       })
+    },
+    // 获取频道
+    getchannels () {
+      this.$axios({ url: '/channels' }).then(res => {
+        this.channels = res.data.channels
+      })
+    }
+  },
+  filters: {
+    status (value) {
+      // 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '已发布'
+        case 3:
+          return '审核失败'
+        default:
+          break
+      }
+    },
+    filterscolor (value) {
+      switch (value) {
+        case 0:
+          return 'warning'
+        case 1:
+          return 'info'
+        case 2:
+          return 'success'
+        case 3:
+          return 'danger'
+        default:
+          break
+      }
     }
   },
   created () {
+    this.getchannels()
     this.getdata()
   }
 }
@@ -112,6 +158,7 @@ export default {
            }
          .tag{
             width:60px;
+            text-align: center;
          }
 
     }
