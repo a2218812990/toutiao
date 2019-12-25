@@ -35,13 +35,13 @@
 <div class="title">
     共找到0条符合条件的内容
 </div>
-<div class="list">
+<div class="list" v-for="item in list" :key='item.id.toString()' >
    <div class="leftimg">
      <img src="../../assets/img/tx.jpg" alt="">
      <div class="info">
-       <span>标题足够长就会报服务器数据库异常，但是又没有限制最大字数</span>
-       <el-tag class='tag'>标签一</el-tag>
-       <span class="time">2019-12-24 19:35:31</span>
+       <span>{{item.title}}</span>
+       <el-tag class='tag'>{{item.status}}</el-tag>
+       <span class="time">{{item.pubdate}}</span>
    </div>
       </div>
    <div class="right">
@@ -57,8 +57,19 @@ export default {
   data () {
     return {
       radio: 5,
-      value1: ''
+      value1: '',
+      list: []
     }
+  },
+  methods: {
+    getdata () {
+      this.$axios({ url: '/articles' }).then(res => {
+        this.list = res.data.results
+      })
+    }
+  },
+  created () {
+    this.getdata()
   }
 }
 </script>
