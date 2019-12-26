@@ -49,7 +49,7 @@
    </div>
       </div>
    <div class="right">
-       <span><i class="el-icon-edit"></i>修改</span>
+       <span @click="edit(item.id)"><i class="el-icon-edit"></i>修改</span>
        <span @click="deletes(item.id)"><i class="el-icon-delete"></i>删除</span>
    </div>
 </div>
@@ -87,6 +87,11 @@ export default {
     }
   },
   methods: {
+    //  修改文章功能
+    edit (id) {
+      // 跳到发布文章页面，二者共用一个路由组件，但为了不互相干扰使用动态路由的方式
+      this.$router.push(`/home/publish/${id.toString()}`)
+    },
     // 分页功能
     pagechange (newpage) {
       this.page.currentpage = newpage

@@ -21,7 +21,8 @@ const routes = [
       { path: 'comment', component: () => import('../views/comment/comment.vue') },
       { path: 'material', component: () => import('../views/material') },
       { path: 'articles', component: () => import('../views/articlelist') },
-      { path: 'publish', component: () => import('../views/publish') }
+      { path: 'publish', component: () => import('../views/publish') },
+      { path: 'publish/:id', component: () => import('../views/publish') }
     ]
   },
   {

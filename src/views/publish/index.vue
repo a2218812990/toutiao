@@ -62,7 +62,29 @@ export default {
       }
     }
   },
+  watch: {
+    $route: function (to, from) {
+      // 这个方法是监听路由的变化，并作出相应的反应
+      if (to.params.id) {
+        //   这是修改
+      } else {
+        //  这是发布不带id的url
+        this.formdata = {// 校验表单要绑定给表单
+          title: '',
+          content: '',
+          cover: {
+            type: 0,
+            images: []
+          },
+          channel_id: null
+
+        }
+      }
+    }
+  },
+
   methods: {
+
     //   获取频道数据
     getchannels () {
       this.$axios({
@@ -88,11 +110,23 @@ export default {
           })
         }
       })
+    },
+
+    //   获取文章数据，修改和发布共用，为了区分通过获取pamars中是否有id来进行操作
+    getarticleinfo () {
+      let { id } = this.$route.params
+      if (id) {
+        this.$axios({ url: `/articles/${id}`
+        }).then(res => {
+          this.formdata = res.data
+        })
+      }
     }
   },
 
   created () {
     this.getchannels()
+    this.getarticleinfo()
   }
 }
 </script>
