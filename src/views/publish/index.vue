@@ -31,8 +31,8 @@
   </el-select>
           </el-form-item>
            <el-form-item>
-               <el-button @click="publishArticle" type='primary'>发表</el-button>
-               <el-button @click="publishArticle">存入草稿</el-button>
+               <el-button @click="publishArticle()" type='primary'>发表</el-button>
+               <el-button @click="publishArticle(true)">存入草稿</el-button>
            </el-form-item>
       </el-form>
     </el-card>
@@ -72,10 +72,20 @@ export default {
       })
     },
     //   手动校验表单数据
-    publishArticle () {
+    publishArticle (draft) {
       this.$refs.myform.validate(isOk => {
         if (isOk) {
-          console.log('表单验证成功')
+        //   手动;验证通过的话，调用发布文章的接口
+          this.$axios({
+            url: 'articles',
+            method: 'post',
+            params: { draft },
+            data: this.formdata
+          }).then(res => {
+            //    发布完成后要跳转到文章列表
+            this.$message({ type: 'success', message: '操作成功' })
+            this.$router.push('/home/articles')
+          })
         }
       })
     }
