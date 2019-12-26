@@ -7,31 +7,32 @@
        </template>
        </breadcrumb>
      <!-- 主体部分 -->
-      <el-form class="myfrom" label-width="100px">
-          <el-form-item label="标题" style="width:60%">
-              <el-input></el-input>
+      <el-form class="myfrom" label-width="100px" :model="formdata" :rules="formrules" ref="myform">
+          <el-form-item label="标题" style="width:60%" prop="title">
+              <el-input v-model="formdata.title"></el-input>
           </el-form-item>
-          <el-form-item label="内容">
-                <el-input type="textarea" :rows="4"></el-input>
+          <el-form-item label="内容" prop="content">
+                <el-input type="textarea" :rows="4" v-model="formdata.content"></el-input>
           </el-form-item>
-          <el-form-item label="封面">
-              <el-radio-group>
-              <el-radio>单图</el-radio>
-              <el-radio>三图</el-radio>
-              <el-radio>无图</el-radio>
-              <el-radio>自动</el-radio>
+          <el-form-item label="封面" prop="cover">
+              <el-radio-group v-model="formdata.cover.type">
+                   <!-- // 封面类型 -1:自动，0-无图，1-1张，3-3张 -->
+              <el-radio :label="1">单图</el-radio>
+              <el-radio :label="3">三图</el-radio>
+              <el-radio :label="0">无图</el-radio>
+              <el-radio :label="-1">自动</el-radio>
   </el-radio-group>
           </el-form-item>
-          <el-form-item label="频道">
-           <el-select  placeholder="请选择">
+          <el-form-item label="频道" prop="channel_id">
+           <el-select  placeholder="请选择" v-model="formdata.channel_id">
              <el-option v-for="item  in  channels" :key="item.id"  :label="item.name"
       :value="item.id">
              </el-option>
   </el-select>
           </el-form-item>
            <el-form-item>
-               <el-button type='primary'>发表</el-button>
-               <el-button>存入草稿</el-button>
+               <el-button @click="publishArticle" type='primary'>发表</el-button>
+               <el-button @click="publishArticle">存入草稿</el-button>
            </el-form-item>
       </el-form>
     </el-card>
@@ -41,18 +42,45 @@
 export default {
   data () {
     return {
-      channels: []
+      channels: [],
+
+      formdata: {// 校验表单要绑定给表单
+        title: '',
+        content: '',
+        cover: {
+          type: 0,
+          images: []
+        },
+        channel_id: null
+
+      },
+      //   校验规则也要绑定给表单
+      formrules: {
+        title: [{ required: true, message: '文章标题不能为空' }, { min: 5, max: 30, message: '文字长度在5到30字之间' }],
+        content: [{ required: true, message: '文章内容不能为空' }],
+        channel_id: [{ required: true, message: '文章频道不能为空' }]
+      }
     }
   },
   methods: {
+    //   获取频道数据
     getchannels () {
       this.$axios({
         url: '/channels'
       }).then(res => {
         this.channels = res.data.channels
       })
+    },
+    //   手动校验表单数据
+    publishArticle () {
+      this.$refs.myform.validate(isOk => {
+        if (isOk) {
+          console.log('表单验证成功')
+        }
+      })
     }
   },
+
   created () {
     this.getchannels()
   }
