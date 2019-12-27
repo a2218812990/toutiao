@@ -66,7 +66,7 @@ export default {
     $route: function (to, from) {
       // 这个方法是监听路由的变化，并作出相应的反应
       if (to.params.id) {
-        //   这是修改
+
       } else {
         //  这是发布不带id的url
         this.formdata = {// 校验表单要绑定给表单
@@ -97,10 +97,11 @@ export default {
     publishArticle (draft) {
       this.$refs.myform.validate(isOk => {
         if (isOk) {
-        //   手动;验证通过的话，调用发布文章的接口
+        //   手动验证通过的话，调用发布文章的接口或者修改接口，用判断的方式，为了简写用三元表达式
+          let{ id } = this.$route.params
           this.$axios({
-            url: 'articles',
-            method: 'post',
+            url: id ? `/articles/${id}` : 'articles',
+            method: id ? 'put' : 'post',
             params: { draft },
             data: this.formdata
           }).then(res => {
