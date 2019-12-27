@@ -15,7 +15,7 @@
                 <quill-editor v-model="formdata.content" style="height:300px;"></quill-editor>
           </el-form-item>
           <el-form-item label="封面" prop="cover">
-              <el-radio-group v-model="formdata.cover.type">
+              <el-radio-group @change="imgchange " v-model="formdata.cover.type">
                    <!-- // 封面类型 -1:自动，0-无图，1-1张，3-3张 -->
               <el-radio :label="1">单图</el-radio>
               <el-radio :label="3">三图</el-radio>
@@ -23,6 +23,8 @@
               <el-radio :label="-1">自动</el-radio>
   </el-radio-group>
           </el-form-item>
+          <!-- 封面组件 -->
+          <cover-images @selecttwoimg="getimg" :list="this.formdata.cover.images"></cover-images>
           <el-form-item label="频道" prop="channel_id">
            <el-select  placeholder="请选择" v-model="formdata.channel_id">
              <el-option v-for="item  in  channels" :key="item.id"  :label="item.name"
@@ -80,11 +82,29 @@ export default {
 
         }
       }
-    },
+    }
     // 监听选择几张图片时发生的变化，可以用select自带的监听事件，也可以用watch监听不用带this
-    'formdata.cover.type': function () {
-      // <!-- // 封面类型 -1:自动，0-无图，1-1张，3-3张 -->
-      // 根据type的变化，改变下面显示几张图片上传的组件
+    // 'formdata.cover.type': function () {
+    //   // <!-- // 封面类型 -1:自动，0-无图，1-1张，3-3张 -->
+    //   // 根据type的变化，改变下面显示几张图片上传的组件
+    //   if (this.formdata.cover.type === 0 || this.formdata.cover.type === -1) {
+    //     this.formdata.cover.images = []
+    //   } else if (this.formdata.cover.type === 1) {
+    //     this.formdata.cover.images = ['']
+    //   } else if (this.formdata.cover.type === 3) {
+    //     this.formdata.cover.images = ['', '', '']
+    //   }
+    // }
+
+  },
+
+  methods: {
+    // 在父组件这里直接修改
+    getimg (url, index) {
+      this.formdata.cover.images = this.formdata.cover.images.map((item, i) => i === index ? url : item)
+    },
+    // 监听选择几张图片时发生的变化，可以用单选插件自带的监听事件，也可以用watch监听不用带this
+    imgchange () {
       if (this.formdata.cover.type === 0 || this.formdata.cover.type === -1) {
         this.formdata.cover.images = []
       } else if (this.formdata.cover.type === 1) {
@@ -92,12 +112,7 @@ export default {
       } else if (this.formdata.cover.type === 3) {
         this.formdata.cover.images = ['', '', '']
       }
-    }
-
-  },
-
-  methods: {
-
+    },
     //   获取频道数据
     getchannels () {
       this.$axios({

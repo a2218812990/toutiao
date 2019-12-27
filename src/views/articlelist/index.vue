@@ -39,7 +39,7 @@
 <div class="title">
     共找到{{page.total}}条符合条件的内容
 </div>
-<div class="list" v-for="item in list" :key='item.id.toString()' >
+<div class="list" v-for="item in list" :key='item.id.toString()'>
    <div class="leftimg">
      <img :src="item.cover.images.length?item.cover.images[0]:defaultImg" alt="">
      <div class="info">
