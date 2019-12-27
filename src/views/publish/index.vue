@@ -11,8 +11,8 @@
           <el-form-item label="标题" style="width:60%" prop="title">
               <el-input v-model="formdata.title"></el-input>
           </el-form-item>
-          <el-form-item label="内容" prop="content">
-                <el-input type="textarea" :rows="4" v-model="formdata.content"></el-input>
+          <el-form-item label="内容" prop="content" style="margin-bottom:110px;">
+                <quill-editor v-model="formdata.content" style="height:300px;"></quill-editor>
           </el-form-item>
           <el-form-item label="封面" prop="cover">
               <el-radio-group v-model="formdata.cover.type">
@@ -80,7 +80,20 @@ export default {
 
         }
       }
+    },
+    // 监听选择几张图片时发生的变化，可以用select自带的监听事件，也可以用watch监听不用带this
+    'formdata.cover.type': function () {
+      // <!-- // 封面类型 -1:自动，0-无图，1-1张，3-3张 -->
+      // 根据type的变化，改变下面显示几张图片上传的组件
+      if (this.formdata.cover.type === 0 || this.formdata.cover.type === -1) {
+        this.formdata.cover.images = []
+      } else if (this.formdata.cover.type === 1) {
+        this.formdata.cover.images = ['']
+      } else if (this.formdata.cover.type === 3) {
+        this.formdata.cover.images = ['', '', '']
+      }
     }
+
   },
 
   methods: {
