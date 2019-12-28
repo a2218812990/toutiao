@@ -6,8 +6,8 @@
 </div>
 <!-- 左侧导航区域 -->
 <el-menu router background-color="#353b4e" text-color="#adafb5" >
-    <el-menu-item>
-      <span slot="title" index="./home">首页</span>
+    <el-menu-item index="/home">
+      <span slot="title">首页</span>
  </el-menu-item>
 
  <el-submenu index='1'>

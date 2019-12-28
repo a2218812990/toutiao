@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
@@ -29,8 +30,9 @@ export default {
     }
   },
   created () {
-    this.$axios({ url: '/user/profile' }).then(res => {
-      this.resultinfo = res.data
+    this.getinfo()
+    eventBus.$on('uploadimg', () => {
+      this.getinfo()
     })
   },
   methods: {
@@ -43,7 +45,13 @@ export default {
         localStorage.removeItem('user-token')
         this.$router.push('/login')
       }
+    },
+    getinfo () {
+      this.$axios({ url: '/user/profile' }).then(res => {
+        this.resultinfo = res.data
+      })
     }
+
   }
 }
 </script>

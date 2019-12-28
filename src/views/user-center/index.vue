@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading">
      <breadcrumb slot='header'>
         <template slot="title">
          账户信息
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
@@ -42,6 +43,7 @@ export default {
         photo: ''
       },
       defaultimg: require('../../assets/img/tx.jpg'),
+      loading: false,
       rules: {
         name: [{ required: true, message: '用户名不能为空' }, { max: 6, min: 2, message: '用户名在2到6个字符之间' }],
         email: [{ required: true, message: '邮箱不能为空' }, { pattern: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/, message: '邮箱格式不正确' }]
@@ -51,20 +53,29 @@ export default {
   methods: {
     //   上传图片
     uploadimg (params) {
+      this.loading = true
       let data = new FormData()
       data.append('photo', params.file)
       this.$axios({
         url: '/user/photo',
         method: 'PATCH',
         data
-      }).then(res => { this.formdata.photo = res.data.photo })
+      }).then(res => {
+        this.formdata.photo = res.data.photo
+        eventBus.$emit('uploadimg')
+        this.loading = false
+      })
     },
     //   手动校验
     saveinfo () {
+      this.loading = true
       this.$refs.myform.validate().then(res => {
         //   如果校验成功就调用修改用户信息的接口
         this.$axios({ url: '/user/profile', data: this.formdata, method: 'patch' }).then(res => {
           this.$message({ type: 'success', message: '保存成功' })
+          //   点击提交信息的时候，触发自定义事件
+          eventBus.$emit('uploadimg')
+          this.loading = false
         })
       })
     },
