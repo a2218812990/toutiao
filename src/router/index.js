@@ -22,7 +22,8 @@ const routes = [
       { path: 'material', component: () => import('../views/material') },
       { path: 'articles', component: () => import('../views/articlelist') },
       { path: 'publish', component: () => import('../views/publish') },
-      { path: 'publish/:id', component: () => import('../views/publish') }
+      { path: 'publish/:id', component: () => import('../views/publish') },
+      { path: 'userCenter', component: () => import('../views/user-center') }
     ]
   },
   {
