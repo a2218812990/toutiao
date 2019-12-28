@@ -15,8 +15,8 @@
 <el-tabs v-model="activeName" type="card" @tab-click="tabclick">
  <el-tab-pane label="全部图片" name="all">
      <div class="photo" >
-       <el-card v-for="item in list" :key="item.id" class="card">
-          <img :src="item.url" alt="">
+       <el-card v-for="(item,index) in list" :key="item.id" class="card">
+          <img :src="item.url" alt="" @click="previewimg(index)">
           <el-row class="icon" type="flex" align='middle' justify="space-around">
                <i class="el-icon-star-on" @click="collectphoto(item)" :style="{color:item.is_collected?'red':'#000'}"></i>
               <i  @click='deletephoto(item.id)' class="el-icon-delete-solid"></i>
@@ -43,6 +43,16 @@
   >
 </el-pagination>
 </el-row>
+<!-- 弹层显示 -->
+<el-dialog :visible="dialogvisibale" @close='dialogvisibale=false' :open="openend">
+  <!-- 走马灯 -->
+  <el-carousel ref="mycarousel" indicator-position="outside"  height='400px'>
+    <el-carousel-item v-for="item in list" :key="item.id">
+      <img :src="item.url" alt="" style="width:100%;height:100%">
+    </el-carousel-item>
+  </el-carousel>
+</el-dialog>
+
 </el-card>
 </template>
 
@@ -58,10 +68,21 @@ export default {
         currentpage: 1
       },
       loading: false,
-      collect: true
+      collect: true,
+      dialogvisibale: false,
+      clickindex: -1
     }
   },
   methods: {
+    openend () {
+      this.$refs.mycarousel.setActiveItem(this.clickindex)
+    },
+    // 点击打开弹层
+    previewimg (index) {
+      // dailog是懒加载，第一次没有弹出之前不能设置index
+      this.dialogvisibale = true
+      this.clickindex = index
+    },
     //   收藏和取消收藏图片
     collectphoto (target) {
       this.$axios({
