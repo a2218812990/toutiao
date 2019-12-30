@@ -84,21 +84,18 @@ export default {
       this.clickindex = index
     },
     //   收藏和取消收藏图片
-    collectphoto (target) {
-      this.$axios({
+    async collectphoto (target) {
+      await this.$axios({
         url: `/user/images/${target.id}`,
         method: 'put',
-        data: { collect: !target.is_collected } }).then(res => {
-        this.getphoto()
-      })
+        data: { collect: !target.is_collected } })
+      this.getphoto()
     },
     // 删除图片素材
-    deletephoto (target) {
-      this.$confirm('你确定要删除这张图片吗？').then(() => {
-        this.$axios({ url: `/user/images/${target}`, method: 'delete' }).then(() => {
-          this.getphoto()
-        })
-      })
+    async deletephoto (target) {
+      await this.$confirm('你确定要删除这张图片吗？')
+      await this.$axios({ url: `/user/images/${target}`, method: 'delete' })
+      this.getphoto()
     },
     //   文件上传事件
     uploadfile (params) {
@@ -120,14 +117,13 @@ export default {
       this.page.currentpage = 1
       this.getphoto()
     },
-    getphoto () {
-      this.$axios({
+    async getphoto () {
+      let res = await this.$axios({
         url: '/user/images',
         params: { collect: this.activeName === 'collect', page: this.page.currentpage, per_page: this.page.pagesize }
-      }).then(res => {
-        this.page.total = res.data.total_count
-        this.list = res.data.results
       })
+      this.page.total = res.data.total_count
+      this.list = res.data.results
     }
   },
   created () {
