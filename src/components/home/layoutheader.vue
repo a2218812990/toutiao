@@ -1,7 +1,7 @@
 <template>
 <el-row class="container" type="flex" align="middle">
   <el-col :span="12">
-      <i class="el-icon-s-fold"></i>
+      <i @click="changeicon" :class="{'el-icon-s-fold': collapse,'el-icon-s-unfold':!collapse}"></i>
       <span>江苏传智播客教育科技股份有限公司</span>
   </el-col>
    <el-col :span="12">
@@ -26,7 +26,9 @@ export default {
   data () {
     return {
       resultinfo: {},
-      photourl: require('../../assets/img/tx.jpg')
+      photourl: require('../../assets/img/tx.jpg'),
+      collapse: false
+
     }
   },
   created () {
@@ -36,6 +38,11 @@ export default {
     })
   },
   methods: {
+    // 折叠导航栏和改变图标方向
+    changeicon () {
+      this.collapse = !this.collapse // 要么折叠要么展开
+      eventBus.$emit('changecollapse')
+    },
     clickmenu (command) {
       if (command === 'info') {
 
