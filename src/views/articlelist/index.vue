@@ -68,6 +68,7 @@
 </template>
 
 <script>
+// import { getarticle } from '../../actions/article.js'
 export default {
   data () {
     return {
@@ -127,18 +128,16 @@ export default {
       this.page.currentpage = 1
       this.methodchange()
     },
-    // 获取文章数据
-    getdata (params) {
-      this.$axios({ url: '/articles', params }).then(res => {
-        this.list = res.data.results
-        this.page.total = res.data.total_count
-      })
-    },
     // 获取频道
-    getchannels () {
-      this.$axios({ url: '/channels' }).then(res => {
-        this.channels = res.data.channels
-      })
+    async getchannels () {
+      let res = await this.$axios({ url: '/channels' })
+      this.channels = res.data.channels
+    },
+    // 获取文章数据
+    async getdata (params) {
+      let res = await this.$axios({ url: '/articles', params })
+      this.list = res.data.results
+      this.page.total = res.data.total_count
     }
   },
   filters: {
